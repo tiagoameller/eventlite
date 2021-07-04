@@ -3,7 +3,7 @@ import Event from "./Event"
 
 const EventsList = props => (
   <div>
-    {props.events.map((event, i) => {
+    {props.events.map((event) => {
       return(
         <Event key={event.id} event={event}/>
       )

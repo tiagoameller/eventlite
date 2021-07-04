@@ -7,7 +7,7 @@ const FormErrors = (props) =>
         return (
           props.formErrors[formErrorField].map((error) => {
             return (
-              <li>{formErrorField} {error}</li>
+              <li key={formErrorField}>{formErrorField} {error}</li>
             )
           })
         )
