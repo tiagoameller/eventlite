@@ -6,6 +6,8 @@ import EventsList from "./EventsList"
 import EventForm from "./EventForm"
 import FormErrors from "./FormErrors"
 
+import validations from "../validations"
+
 class Eventlite extends React.Component {
   constructor (props) {
     super(props)
@@ -76,31 +78,33 @@ class Eventlite extends React.Component {
 
   validateField(fieldName, fieldValue) {
     let fieldValid = true
+    let fieldError = ""
     let errors = []
     switch(fieldName) {
       case 'title':
-      if(fieldValue.length <= 2) {
-        errors = errors.concat(["is too short (minimum is 3 characters)"])
-        fieldValid = false
-      }
-      break
+        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 3)
+        if(!fieldValid) {
+          errors = errors.concat([fieldError])
+        }
+        break
 
       case 'location':
-      if(fieldValue.length === 0) {
-        errors = errors.concat(["can't be blank"])
-        fieldValid = false
-      }
-      break
+        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1)
+        if(!fieldValid) {
+          errors = errors.concat([fieldError])
+        }
+        break
 
       case 'start_datetime':
-      if(fieldValue.length === 0) {
-        errors = errors.concat(["can't be blank"])
-        fieldValid = false
-      } else if(Date.parse(fieldValue) <= Date.now()) {
-        errors = errors.concat(["can't be in the past"])
-        fieldValid = false
-      }
-      break
+        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1)
+        if(!fieldValid) {
+          errors = errors.concat([fieldError])
+        }
+        [fieldValid, fieldError] = validations.timeShouldBeInTheFuture(fieldValue)
+        if(!fieldValid) {
+          errors = errors.concat([fieldError])
+        }
+        break
     }
     const newState = {formErrors: {...this.state.formErrors, [fieldName]: errors}}
     newState[fieldName] = {...this.state[fieldName], valid: fieldValid}
