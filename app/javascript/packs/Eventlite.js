@@ -4,6 +4,7 @@ import axios from "axios"
 
 import EventsList from "./EventsList"
 import EventForm from "./EventForm"
+import FormErrors from "./FormErrors"
 
 class Eventlite extends React.Component {
   constructor (props) {
@@ -12,7 +13,8 @@ class Eventlite extends React.Component {
       events: this.props.events,
       title: '',
       start_datetime: '',
-      location: ''
+      location: '',
+      formErrors: {}
     }
   }
 
@@ -41,22 +43,29 @@ class Eventlite extends React.Component {
     })
     .then(response => {
       this.addNewEvent(response.data)
+      this.resetFormErrors()
     })
     .catch(error => {
-      console.log(error)
+      console.log(error.response.data)
+      this.setState({formErrors: error.response.data})
     })
   }
 
   addNewEvent = (event) => {
     const events = [event, ...this.state.events].sort((a,b) => {
-      return new Date(a.start_datetime) -  new Date(b.start_datetime)
+      return new Date(b.start_datetime) - new Date(a.start_datetime)
     })
     this.setState({events: events})
+  }
+
+  resetFormErrors () {
+    this.setState({formErrors: {}})
   }
 
   render () {
     return(
       <div>
+        <FormErrors formErrors = {this.state.formErrors} />
         <EventForm
           handleInput = {this.handleInput}
           handleSubmit = {this.handleSubmit}

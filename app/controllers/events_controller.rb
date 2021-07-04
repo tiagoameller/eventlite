@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   def index
-    @events = Event.order(start_datetime: :asc)
+    @events = Event.order(start_datetime: :desc)
   end
 
   def create
