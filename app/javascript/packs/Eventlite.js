@@ -21,6 +21,19 @@ class Eventlite extends React.Component {
     }
   }
 
+  static formValidations = {
+    title: [
+      (value) => { return(validations.checkMinLength(value, 3)) }
+    ],
+    start_datetime: [
+      (value) => { return(validations.checkMinLength(value, 1)) },
+      (value) => { return(validations.timeShouldBeInTheFuture(value)) }
+    ],
+    location: [
+      (value) => { return(validations.checkMinLength(value, 1)) }
+    ]
+  }
+
   handleInput = (event) => {
     event.preventDefault()
     const name = event.target.name
@@ -28,7 +41,7 @@ class Eventlite extends React.Component {
     const newState = {}
     newState[name] = {...this.state[name], value: value}
     // We can pass a validation function as the second optional argument to setState.
-    this.setState(newState, () => this.validateField(name, value))
+    this.setState(newState, () => this.validateField(name, value, Eventlite.formValidations[name]))
   }
 
   handleSubmit = (event) => {
@@ -76,36 +89,17 @@ class Eventlite extends React.Component {
     })
   }
 
-  validateField(fieldName, fieldValue) {
+  validateField(fieldName, fieldValue, fieldValidations) {
     let fieldValid = true
-    let fieldError = ""
-    let errors = []
-    switch(fieldName) {
-      case 'title':
-        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 3)
-        if(!fieldValid) {
-          errors = errors.concat([fieldError])
-        }
-        break
+    let errors = fieldValidations.reduce((errors, validation) => {
+      let [valid, fieldError] = validation(fieldValue)
+      if (!valid) {
+        errors = errors.concat([fieldError])
+      }
+      return errors
+    }, [])
+    fieldValid = errors.length === 0
 
-      case 'location':
-        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1)
-        if(!fieldValid) {
-          errors = errors.concat([fieldError])
-        }
-        break
-
-      case 'start_datetime':
-        [fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1)
-        if(!fieldValid) {
-          errors = errors.concat([fieldError])
-        }
-        [fieldValid, fieldError] = validations.timeShouldBeInTheFuture(fieldValue)
-        if(!fieldValid) {
-          errors = errors.concat([fieldError])
-        }
-        break
-    }
     const newState = {formErrors: {...this.state.formErrors, [fieldName]: errors}}
     newState[fieldName] = {...this.state[fieldName], valid: fieldValid}
     this.setState(newState, this.validateForm)
