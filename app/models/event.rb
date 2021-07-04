@@ -13,7 +13,7 @@ class Event < ApplicationRecord
   validates :title, presence: true, length: { minimum: 3 }
   validates :start_datetime, presence: true
   validate :start_datetime_cannot_be_in_the_past
-  validates :location, presence: true, length: { minimum: 3 }
+  validates :location, presence: true
 
   private
 

@@ -14,7 +14,8 @@ class Eventlite extends React.Component {
       title: '',
       start_datetime: '',
       location: '',
-      formErrors: {}
+      formErrors: {},
+      formValid: false
     }
   }
 
@@ -23,7 +24,8 @@ class Eventlite extends React.Component {
     const name = event.target.name
     const newState = {}
     newState[name] = event.target.value
-    this.setState(newState)
+    // We can pass a validation function as the second optional argument to setState.
+    this.setState(newState, this.validateForm)
   }
 
   handleSubmit = (event) => {
@@ -62,6 +64,27 @@ class Eventlite extends React.Component {
     this.setState({formErrors: {}})
   }
 
+  validateForm () {
+    let formErrors = {}
+    let formValid = true
+    if(this.state.title.length <= 2) {
+      formErrors.title = ["is too short (minimum is 3 characters)"]
+      formValid = false
+    }
+    if(this.state.location.length === 0) {
+      formErrors.location = ["can't be blank"]
+      formValid = false
+    }
+    if(this.state.start_datetime.length === 0) {
+      formErrors.start_datetime = ["can't be blank"]
+      formValid = false
+    } else if(Date.parse(this.state.start_datetime) <= Date.now()) {
+      formErrors.start_datetime = ["can't be in the past"]
+      formValid = false
+    }
+    this.setState({formValid: formValid, formErrors: formErrors})
+  }
+
   render () {
     return(
       <div>
@@ -69,6 +92,7 @@ class Eventlite extends React.Component {
         <EventForm
           handleInput = {this.handleInput}
           handleSubmit = {this.handleSubmit}
+          formValid = {this.state.formValid}
           title = {this.state.title}
           start_datetime = {this.state.start_datetime}
           location = {this.state.location}
