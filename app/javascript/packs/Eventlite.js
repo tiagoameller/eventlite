@@ -19,6 +19,7 @@ class Eventlite extends React.Component {
       formErrors: {},
       formValid: false
     }
+    this.logo = React.createRef()
   }
 
   static formValidations = {
@@ -73,7 +74,7 @@ class Eventlite extends React.Component {
     const events = [event, ...this.state.events].sort((a,b) => {
       return new Date(b.start_datetime) - new Date(a.start_datetime)
     })
-    this.setState({events: events})
+    this.setState({events: events}, this.afterCreateEvent)
   }
 
   resetFormErrors () {
@@ -105,9 +106,28 @@ class Eventlite extends React.Component {
     this.setState(newState, this.validateForm)
   }
 
+  afterCreateEvent = () => {
+    this.clearFields()
+    this.changeLogoColour()
+  }
+
+  clearFields () {
+    this.setState({
+      title: {value: "", valid: false},
+      start_datetime: {value: "", valid: false},
+      location: {value: "", valid: false}
+    })
+  }
+
+  changeLogoColour () {
+    const colors = ["red", "blue", "green", "yellow"]
+    this.logo.current.style.color = colors[Math.floor(Math.random() * colors.length)]
+  }
+
   render () {
     return(
       <div>
+        <h1 className="logo" ref={this.logo}>Eventlite</h1>
         <FormErrors formErrors = {this.state.formErrors} />
         <EventForm
           handleInput = {this.handleInput}
