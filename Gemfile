@@ -25,6 +25,8 @@ gem 'jbuilder', '~> 2.7'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+# this is an only API app
+gem 'rack-cors'
 
 group :production do
   # Use postgresql as the database for Active Record
