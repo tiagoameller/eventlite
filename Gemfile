@@ -27,6 +27,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 # this is an only API app
 gem 'rack-cors'
+gem 'devise'
+gem 'devise_token_auth'
 
 group :production do
   # Use postgresql as the database for Active Record
