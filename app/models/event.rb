@@ -15,6 +15,8 @@ class Event < ApplicationRecord
   validate :start_datetime_cannot_be_in_the_past
   validates :location, presence: true
 
+  belongs_to :user
+
   private
 
   def start_datetime_cannot_be_in_the_past

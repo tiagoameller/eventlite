@@ -5,7 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-events = Event.create([
+john = User.create(email: 'john@sample.com', password: '123456')
+jane = User.create(email: 'jane@sample.com', password: '123456')
+
+john.events.create([
   {
     title: "London Retail Expo",
     start_datetime: "Mon, 14 Oct 2019",
@@ -15,7 +18,10 @@ events = Event.create([
     title: "Enterprise Sales Training Workshop",
     start_datetime: "Tue, 15 Oct 2019",
     location: "Expert Sales Company Headquarters"
-  },
+  }
+])
+
+jane.events.create([
   {
     title: "Ruby Hack Night",
     start_datetime: "Fri, 18 Oct 2019",
