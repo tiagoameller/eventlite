@@ -15,6 +15,11 @@ module Api
         end
       end
 
+      def show
+        @event = Event.find(params[:id])
+        render json: @event.as_json(except: :user_id, include: { user: { only: [:name, :nickname, :image] } })
+      end
+
       private
 
       def event_params
