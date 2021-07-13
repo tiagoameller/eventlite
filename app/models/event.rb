@@ -8,6 +8,13 @@
 #  location       :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  user_id        :bigint           not null
+#  description    :text
+#  image_url      :string
+#
+# Indexes
+#
+#  index_events_on_user_id  (user_id)
 #
 class Event < ApplicationRecord
   validates :title, presence: true, length: { minimum: 3 }
