@@ -20,6 +20,15 @@ module Api
         render json: @event.as_json(except: :user_id, include: { user: { only: [:name, :nickname, :image] } })
       end
 
+      def update
+        @event = Event.find(params[:id])
+        if @event.update(event_params)
+          render json: @event
+        else
+          render json: @event.errors, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def event_params
