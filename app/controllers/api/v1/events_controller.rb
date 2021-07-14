@@ -17,7 +17,11 @@ module Api
 
       def show
         @event = Event.find(params[:id])
-        render json: @event.as_json(except: :user_id, include: { user: { only: [:name, :nickname, :image] } })
+        render(
+          json: @event.as_json(
+            except: :user_id, include: { user: { only: [:name, :nickname, :image] } }
+          ).merge(currentUserCanEdit: @event.user.email == request.headers['uid'])
+        )
       end
 
       def update
