@@ -25,20 +25,20 @@ module Api
       end
 
       def update
-        @event = Event.find(params[:id])
-        if @event.update(event_params)
+        @event = current_user.events.find_by(id: params[:id])
+        if @event&.update(event_params)
           render json: @event
         else
-          render json: @event.errors, status: :unprocessable_entity
+          render json: (@event&.errors || { event: 'Event not found' }), status: :unprocessable_entity
         end
       end
 
       def destroy
-        @event = Event.find(params[:id])
-        if @event.destroy
+        @event = current_user.events.find_by(id: params[:id])
+        if @event&.destroy
           head :no_content, status: :ok
         else
-          render json: @event.errors, status: :unprocessable_entity
+          render json: (@event&.errors || { event: 'Event not found' }), status: :unprocessable_entity
         end
       end
 
